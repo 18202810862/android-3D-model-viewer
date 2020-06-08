@@ -25,6 +25,8 @@ import java.util.Map;
 
 public class ContentUtils {
 
+    private static final String TAG = "ContentUtils";
+
     /**
      * Documents opened by the user. This list helps finding the relative filenames found in the model
      */
@@ -65,6 +67,7 @@ public class ContentUtils {
         documentsProvided.clear();
         try {
             for (String document : activity.getAssets().list("models")) {
+                Log.i(TAG,"document = " + document);
                 documentsProvided.put(document, Uri.parse("assets://assets/models/" + document));
             }
         } catch (IOException ex) {
