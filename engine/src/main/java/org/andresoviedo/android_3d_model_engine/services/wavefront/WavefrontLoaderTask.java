@@ -2,7 +2,8 @@ package org.andresoviedo.android_3d_model_engine.services.wavefront;
 
 import android.app.Activity;
 import android.net.Uri;
-import android.opengl.GLES20;
+import android.opengl.GLES30;
+import android.opengl.GLES30;
 import android.util.Log;
 
 import org.andresoviedo.android_3d_model_engine.model.Object3DData;
@@ -48,7 +49,7 @@ public class WavefrontLoaderTask extends LoaderTask {
         data3D.setId(uri.getPath());
         data3D.setUri(uri);
         data3D.setLoader(wfl);
-        data3D.setDrawMode(GLES20.GL_TRIANGLES);
+        data3D.setDrawMode(GLES30.GL_TRIANGLES);
         data3D.setDimensions(data3D.getLoader().getDimensions());
 
         return Collections.singletonList(data3D);
@@ -71,7 +72,7 @@ public class WavefrontLoaderTask extends LoaderTask {
             data.setScale(new float[]{5, 5, 5});
 
             // draw triangles instead of points
-            data.setDrawMode(GLES20.GL_TRIANGLES);
+            data.setDrawMode(GLES30.GL_TRIANGLES);
 
             // build 3D object buffers
             publishProgress(4);

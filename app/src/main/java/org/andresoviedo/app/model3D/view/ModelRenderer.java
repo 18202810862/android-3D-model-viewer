@@ -1,6 +1,6 @@
 package org.andresoviedo.app.model3D.view;
 
-import android.opengl.GLES20;
+import android.opengl.GLES30;
 import android.opengl.GLSurfaceView;
 import android.opengl.Matrix;
 import android.util.Log;
@@ -126,17 +126,18 @@ public class ModelRenderer implements GLSurfaceView.Renderer {
 	public void onSurfaceCreated(GL10 unused, EGLConfig config) {
 		// Set the background frame color
 		float[] backgroundColor = main.getModelActivity().getBackgroundColor();
-		GLES20.glClearColor(backgroundColor[0], backgroundColor[1], backgroundColor[2], backgroundColor[3]);
+		GLES30.glClearColor(backgroundColor[0], backgroundColor[1], backgroundColor[2], backgroundColor[3]);
 
+		GLES30.glEnable(GLES30.GL_TEXTURE_2D);
 		// Use culling to remove back faces.
 		// Don't remove back faces so we can see them
-		// GLES20.glEnable(GLES20.GL_CULL_FACE);
+		// GLES30.glEnable(GLES30.GL_CULL_FACE);
 
 		// Enable depth testing for hidden-surface elimination.
-		GLES20.glEnable(GLES20.GL_DEPTH_TEST);
+		GLES30.glEnable(GLES30.GL_DEPTH_TEST);
 
 		// Enable not drawing out of view port
-		GLES20.glEnable(GLES20.GL_SCISSOR_TEST);
+		GLES30.glEnable(GLES30.GL_SCISSOR_TEST);
 	}
 
 	@Override
@@ -145,7 +146,7 @@ public class ModelRenderer implements GLSurfaceView.Renderer {
 		this.height = height;
 
 		// Adjust the viewport based on geometry changes, such as screen rotation
-		GLES20.glViewport(0, 0, width, height);
+		GLES30.glViewport(0, 0, width, height);
 
 		// the projection matrix is the 3D virtual space (cube) that we want to project
 		float ratio = (float) width / height;
@@ -162,11 +163,11 @@ public class ModelRenderer implements GLSurfaceView.Renderer {
 		}
 		try {
 
-			GLES20.glViewport(0, 0, width, height);
-			GLES20.glScissor(0, 0, width, height);
+			GLES30.glViewport(0, 0, width, height);
+			GLES30.glScissor(0, 0, width, height);
 
 			// Draw background color
-			GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
+			GLES30.glClear(GLES30.GL_COLOR_BUFFER_BIT | GLES30.GL_DEPTH_BUFFER_BIT);
 
 			SceneLoader scene = main.getModelActivity().getScene();
 			if (scene == null) {
@@ -177,13 +178,13 @@ public class ModelRenderer implements GLSurfaceView.Renderer {
 			float[] colorMask = null;
 			if (scene.isBlendingEnabled()) {
 				// Enable blending for combining colors when there is transparency
-				GLES20.glEnable(GLES20.GL_BLEND);
-				GLES20.glBlendFunc(GLES20.GL_ONE, GLES20.GL_ONE_MINUS_SRC_ALPHA);
+				GLES30.glEnable(GLES30.GL_BLEND);
+				GLES30.glBlendFunc(GLES30.GL_ONE, GLES30.GL_ONE_MINUS_SRC_ALPHA);
 				if (scene.isBlendingForced()){
 					colorMask = BLENDING_FORCED_MASK_COLOR;
 				}
 			} else {
-				GLES20.glDisable(GLES20.GL_BLEND);
+				GLES30.glDisable(GLES30.GL_BLEND);
 			}
 
 			// animate scene
@@ -261,14 +262,14 @@ public class ModelRenderer implements GLSurfaceView.Renderer {
 			if (scene.isVRGlasses()) {
 
 				// draw left eye image
-				GLES20.glViewport(0, 0, width / 2, height);
-				GLES20.glScissor(0, 0, width / 2, height);
+				GLES30.glViewport(0, 0, width / 2, height);
+				GLES30.glScissor(0, 0, width / 2, height);
 				this.onDrawFrame(viewMatrixLeft, projectionMatrixLeft, viewProjectionMatrixLeft, lightPosInWorldSpace,
 						null, cameraPosInWorldSpace);
 
 				// draw right eye image
-				GLES20.glViewport(width / 2, 0, width / 2, height);
-				GLES20.glScissor(width / 2, 0, width / 2, height);
+				GLES30.glViewport(width / 2, 0, width / 2, height);
+				GLES30.glScissor(width / 2, 0, width / 2, height);
 				this.onDrawFrame(viewMatrixRight, projectionMatrixRight, viewProjectionMatrixRight, lightPosInWorldSpace,
 						null, cameraPosInWorldSpace);
 			}
@@ -362,15 +363,15 @@ public class ModelRenderer implements GLSurfaceView.Renderer {
 				}
 
 				// draw points
-				if (objData.getDrawMode() == GLES20.GL_POINTS){
+				if (objData.getDrawMode() == GLES30.GL_POINTS){
 					Object3D basicDrawer = drawer.getPointDrawer();
-					basicDrawer.draw(objData, projectionMatrix, viewMatrix, GLES20.GL_POINTS, lightPosInWorldSpace, cameraPosInWorldSpace);
+					basicDrawer.draw(objData, projectionMatrix, viewMatrix, GLES30.GL_POINTS, lightPosInWorldSpace, cameraPosInWorldSpace);
 				}
 
 				// draw wireframe
-				else if (scene.isDrawWireframe() && objData.getDrawMode() != GLES20.GL_POINTS
-						&& objData.getDrawMode() != GLES20.GL_LINES && objData.getDrawMode() != GLES20.GL_LINE_STRIP
-						&& objData.getDrawMode() != GLES20.GL_LINE_LOOP) {
+				else if (scene.isDrawWireframe() && objData.getDrawMode() != GLES30.GL_POINTS
+						&& objData.getDrawMode() != GLES30.GL_LINES && objData.getDrawMode() != GLES30.GL_LINE_STRIP
+						&& objData.getDrawMode() != GLES30.GL_LINE_LOOP) {
 					// Log.d("ModelRenderer","Drawing wireframe model...");
 					try{
 						// Only draw wireframes for objects having faces (triangles)
@@ -392,7 +393,7 @@ public class ModelRenderer implements GLSurfaceView.Renderer {
 				// draw points
 				else if (scene.isDrawPoints() || objData.getFaces() == null || !objData.getFaces().loaded()){
 						drawerObject.draw(objData, projectionMatrix, viewMatrix
-								, GLES20.GL_POINTS, objData.getDrawSize(),
+								, GLES30.GL_POINTS, objData.getDrawSize(),
 								textureId, lightPosInWorldSpace, colorMask, cameraPosInWorldSpace);
 				}
 

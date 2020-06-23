@@ -2,7 +2,7 @@ package org.andresoviedo.util.android;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.opengl.GLES20;
+import android.opengl.GLES30;
 import android.opengl.GLUtils;
 import android.util.Log;
 
@@ -29,34 +29,34 @@ public final class GLUtil {
 	 */
 	public static int createAndLinkProgram(final int vertexShaderHandle, final int fragmentShaderHandle,
 			final String[] attributes) {
-		int programHandle = GLES20.glCreateProgram();
+		int programHandle = GLES30.glCreateProgram();
 
 		if (programHandle != 0) {
 			// Bind the vertex shader to the program.
-			GLES20.glAttachShader(programHandle, vertexShaderHandle);
+			GLES30.glAttachShader(programHandle, vertexShaderHandle);
 
 			// Bind the fragment shader to the program.
-			GLES20.glAttachShader(programHandle, fragmentShaderHandle);
+			GLES30.glAttachShader(programHandle, fragmentShaderHandle);
 
 			// Bind attributes
 			if (attributes != null) {
 				final int size = attributes.length;
 				for (int i = 0; i < size; i++) {
-					GLES20.glBindAttribLocation(programHandle, i, attributes[i]);
+					GLES30.glBindAttribLocation(programHandle, i, attributes[i]);
 				}
 			}
 
 			// Link the two shaders together into a program.
-			GLES20.glLinkProgram(programHandle);
+			GLES30.glLinkProgram(programHandle);
 
 			// Get the link status.
 			final int[] linkStatus = new int[1];
-			GLES20.glGetProgramiv(programHandle, GLES20.GL_LINK_STATUS, linkStatus, 0);
+			GLES30.glGetProgramiv(programHandle, GLES30.GL_LINK_STATUS, linkStatus, 0);
 
 			// If the link failed, delete the program.
 			if (linkStatus[0] == 0) {
-				Log.e(TAG, "Error compiling program: " + GLES20.glGetProgramInfoLog(programHandle));
-				GLES20.glDeleteProgram(programHandle);
+				Log.e(TAG, "Error compiling program: " + GLES30.glGetProgramInfoLog(programHandle));
+				GLES30.glDeleteProgram(programHandle);
 				programHandle = 0;
 			}
 		}
@@ -83,20 +83,20 @@ public final class GLUtil {
 	 */
 	public static int loadShader(int type, String shaderCode) {
 
-		// create a vertex shader type (GLES20.GL_VERTEX_SHADER)
-		// or a fragment shader type (GLES20.GL_FRAGMENT_SHADER)
-		int shader = GLES20.glCreateShader(type);
+		// create a vertex shader type (GLES30.GL_VERTEX_SHADER)
+		// or a fragment shader type (GLES30.GL_FRAGMENT_SHADER)
+		int shader = GLES30.glCreateShader(type);
 
 		// add the source code to the shader and compile it
-		GLES20.glShaderSource(shader, shaderCode);
-		GLES20.glCompileShader(shader);
+		GLES30.glShaderSource(shader, shaderCode);
+		GLES30.glCompileShader(shader);
 
 		int[] compiled = new int[1];
-		GLES20.glGetShaderiv(shader, GLES20.GL_COMPILE_STATUS, compiled, 0);
-		Log.i("GLUtil", "Shader compilation info: " + GLES20.glGetShaderInfoLog(shader));
+		GLES30.glGetShaderiv(shader, GLES30.GL_COMPILE_STATUS, compiled, 0);
+		Log.i("GLUtil", "Shader compilation info: " + GLES30.glGetShaderInfoLog(shader));
 		if (compiled[0] == 0) {
-			Log.e("GLUtil", "Shader error: " + GLES20.glGetShaderInfoLog(shader) + "\n" + shaderCode);
-			GLES20.glDeleteShader(shader);
+			Log.e("GLUtil", "Shader error: " + GLES30.glGetShaderInfoLog(shader) + "\n" + shaderCode);
+			GLES30.glDeleteShader(shader);
 		}
 
 		return shader;
@@ -107,7 +107,7 @@ public final class GLUtil {
 
 		final int[] textureHandle = new int[1];
 
-		GLES20.glGenTextures(1, textureHandle, 0);
+		GLES30.glGenTextures(1, textureHandle, 0);
 		GLUtil.checkGlError("glGenTextures");
 		if (textureHandle[0] == 0) {
 			throw new RuntimeException("Error loading texture.");
@@ -126,15 +126,21 @@ public final class GLUtil {
 		if (bitmap == null) {
 			throw new RuntimeException("couldnt load bitmap");
 		}
+		Log.i("GLUtil","bitmap.size = " + bitmap.getByteCount());
 
 		// Bind to the texture in OpenGL
-		GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, textureHandle[0]);
+		GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, textureHandle[0]);
 		GLUtil.checkGlError("glBindTexture");
-		GLUtils.texImage2D(GLES20.GL_TEXTURE_2D, 0, bitmap, 0);
+
+		//设置2D纹理通道当前绑定的纹理的属性
+		GLES30.glTexParameteri(GLES30.GL_TEXTURE_2D, GLES30.GL_TEXTURE_MIN_FILTER, GLES30.GL_LINEAR);
+		GLES30.glTexParameteri(GLES30.GL_TEXTURE_2D, GLES30.GL_TEXTURE_MAG_FILTER, GLES30.GL_LINEAR);
+
+		GLUtils.texImage2D(GLES30.GL_TEXTURE_2D, 0, bitmap, 0);
 		GLUtil.checkGlError("texImage2D");
 		bitmap.recycle();
-		GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MIN_FILTER, GLES20.GL_NEAREST);
-		GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MAG_FILTER, GLES20.GL_NEAREST);
+//		GLES30.glTexParameteri(GLES30.GL_TEXTURE_2D, GLES30.GL_TEXTURE_MIN_FILTER, GLES30.GL_NEAREST);
+//		GLES30.glTexParameteri(GLES30.GL_TEXTURE_2D, GLES30.GL_TEXTURE_MAG_FILTER, GLES30.GL_NEAREST);
 
 		Log.v("GLUtil", "Loaded texture ok");
 		return textureHandle[0];
@@ -144,7 +150,7 @@ public final class GLUtil {
 	 * Utility method for debugging OpenGL calls. Provide the name of the call just after making it:
 	 * 
 	 * <pre>
-	 * mColorHandle = GLES20.glGetUniformLocation(mProgram, &quot;vColor&quot;);
+	 * mColorHandle = GLES30.glGetUniformLocation(mProgram, &quot;vColor&quot;);
 	 * MyGLRenderer.checkGlError(&quot;glGetUniformLocation&quot;);
 	 * </pre>
 	 * 
@@ -156,7 +162,7 @@ public final class GLUtil {
 	public static boolean checkGlError(String glOperation) {
 		int glError;
 		boolean error = false;
-		while ((glError = GLES20.glGetError()) != GLES20.GL_NO_ERROR) {
+		while ((glError = GLES30.glGetError()) != GLES30.GL_NO_ERROR) {
 			Log.e(TAG, glOperation + ": glError " + glError);
 			error = true;
 			// throw new RuntimeException(glOperation + ": glError " + error);

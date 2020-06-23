@@ -2,7 +2,8 @@ package org.andresoviedo.android_3d_model_engine.services;
 
 import android.app.Activity;
 import android.net.Uri;
-import android.opengl.GLES20;
+import android.opengl.GLES30;
+import android.opengl.GLES30;
 import android.opengl.Matrix;
 import android.util.Log;
 
@@ -354,24 +355,24 @@ public final class Object3DBuilder {
 
 	public static Object3DData buildPoint(float[] point) {
 		return new Object3DData(createNativeByteBuffer(point.length * 4).asFloatBuffer().put(point))
-				.setDrawMode(GLES20.GL_POINTS).setId("Point");
+				.setDrawMode(GLES30.GL_POINTS).setId("Point");
 	}
 
 	public static Object3DData buildLine(float[] line) {
 		return new Object3DData(createNativeByteBuffer(line.length * 4).asFloatBuffer().put(line))
-				.setDrawMode(GLES20.GL_LINES).setId("Line").setFaces(new Faces(0));
+				.setDrawMode(GLES30.GL_LINES).setId("Line").setFaces(new Faces(0));
 	}
 
 	public static Object3DData buildAxis() {
 		return new Object3DData(
 				createNativeByteBuffer(axisVertexLinesData.length * 4).asFloatBuffer().put(axisVertexLinesData))
-				.setDrawMode(GLES20.GL_LINES).setFaces(new Faces(0));
+				.setDrawMode(GLES30.GL_LINES).setFaces(new Faces(0));
 	}
 
 	public static Object3DData buildCubeV1() {
 		return new Object3DData(
 				createNativeByteBuffer(cubePositionData.length * 4).asFloatBuffer().put(cubePositionData))
-				.setDrawMode(GLES20.GL_TRIANGLES).setId("cubeV1").centerAndScale(1.0f).setFaces(new Faces(8));
+				.setDrawMode(GLES30.GL_TRIANGLES).setId("cubeV1").centerAndScale(1.0f).setFaces(new Faces(8));
 	}
 
 	public static Object3DData buildCubeV1_with_normals() {
@@ -381,13 +382,13 @@ public final class Object3DBuilder {
 						createNativeByteBuffer(cubeColorData.length * 4).asFloatBuffer().put(cubeColorData))
 				.setVertexNormalsArrayBuffer(
 						createNativeByteBuffer(cubeNormalData.length * 4).asFloatBuffer().put(cubeNormalData))
-				.setDrawMode(GLES20.GL_TRIANGLES).setId("cubeV1_light").centerAndScale(1.0f).setFaces(new Faces(8));
+				.setDrawMode(GLES30.GL_TRIANGLES).setId("cubeV1_light").centerAndScale(1.0f).setFaces(new Faces(8));
 	}
 
 	public static Object3DData buildSquareV2() {
 		IntBuffer drawBuffer = createNativeByteBuffer(squareDrawOrderData.length * 4).asIntBuffer().put(squareDrawOrderData);
 		FloatBuffer vertexBuffer = createNativeByteBuffer(squarePositionData.length * 4).asFloatBuffer().put(squarePositionData);
-		return new Object3DData(vertexBuffer,drawBuffer.asReadOnlyBuffer()).setDrawMode(GLES20.GL_TRIANGLES).setId("cubeV2")
+		return new Object3DData(vertexBuffer,drawBuffer.asReadOnlyBuffer()).setDrawMode(GLES30.GL_TRIANGLES).setId("cubeV2")
 				.centerAndScale(1.0f).setFaces(new Faces(8)).setDrawOrder(drawBuffer).setVertexArrayBuffer(vertexBuffer);
 	}
 
@@ -396,7 +397,7 @@ public final class Object3DBuilder {
 				createNativeByteBuffer(cubePositionData.length * 4).asFloatBuffer().put(cubePositionData),
 				createNativeByteBuffer(cubeTextureCoordinateData.length * 4).asFloatBuffer()
 						.put(cubeTextureCoordinateData).asReadOnlyBuffer(),
-				textureData).setDrawMode(GLES20.GL_TRIANGLES).setId("cubeV3").centerAndScale(1.0f).setFaces(new Faces(8));
+				textureData).setDrawMode(GLES30.GL_TRIANGLES).setId("cubeV3").centerAndScale(1.0f).setFaces(new Faces(8));
 	}
 
 	public static Object3DData buildCubeV4(byte[] textureData) {
@@ -406,7 +407,7 @@ public final class Object3DBuilder {
 						.asReadOnlyBuffer(),
 				createNativeByteBuffer(cubeTextureCoordinateData.length * 4).asFloatBuffer()
 						.put(cubeTextureCoordinateData).asReadOnlyBuffer(),
-				textureData).setDrawMode(GLES20.GL_TRIANGLES).setId("cubeV4").centerAndScale(1.0f).setFaces(new Faces(8));
+				textureData).setDrawMode(GLES30.GL_TRIANGLES).setId("cubeV4").centerAndScale(1.0f).setFaces(new Faces(8));
 	}
 
 	public static Object3DData loadV5(Activity activity, Uri modelUri) {
@@ -433,7 +434,7 @@ public final class Object3DBuilder {
 			//data3D.centerAndScale(5,new float[]{0,0,0});
 			data3D.centerScale();
 
-			data3D.setDrawMode(GLES20.GL_TRIANGLES);
+			data3D.setDrawMode(GLES30.GL_TRIANGLES);
 			generateArrays(data3D);
 
 			return data3D;
@@ -717,7 +718,7 @@ public final class Object3DBuilder {
 							.getColor())
 							.setVertexColorsArrayBuffer(objData.getVertexColorsArrayBuffer()).setTextureCoordsArrayBuffer(objData.getTextureCoordsArrayBuffer())
 							.setPosition(objData.getPosition()).setRotation(objData.getRotation()).setScale(objData.getScale())
-							.setDrawMode(GLES20.GL_LINES);
+							.setDrawMode(GLES30.GL_LINES);
 					object3DData.setVertexWeights(((AnimatedModel) objData).getVertexWeights());
 					object3DData.setJointIds(((AnimatedModel) objData).getJointIds());
 					object3DData.setRootJoint(((AnimatedModel) objData).getRootJoint(), ((AnimatedModel) objData)
@@ -733,7 +734,7 @@ public final class Object3DBuilder {
 							.setVertexNormalsArrayBuffer(objData.getVertexNormalsArrayBuffer()).setColor(objData.getColor())
 							.setVertexColorsArrayBuffer(objData.getVertexColorsArrayBuffer()).setTextureCoordsArrayBuffer(objData.getTextureCoordsArrayBuffer())
 							.setPosition(objData.getPosition()).setRotation(objData.getRotation()).setScale(objData.getScale())
-							.setDrawMode(GLES20.GL_LINES);
+							.setDrawMode(GLES30.GL_LINES);
 				}
 			} catch (Exception ex) {
 				Log.e("Object3DBuilder", ex.getMessage(), ex);
@@ -757,7 +758,7 @@ public final class Object3DBuilder {
 					.setVertexNormalsArrayBuffer(objData.getVertexNormalsArrayBuffer()).setColor(objData.getColor())
 					.setVertexColorsArrayBuffer(objData.getVertexColorsArrayBuffer()).setTextureCoordsArrayBuffer(objData.getTextureCoordsArrayBuffer())
 					.setPosition(objData.getPosition()).setRotation(objData.getRotation()).setScale(objData.getScale())
-					.setDrawMode(GLES20.GL_LINES);
+					.setDrawMode(GLES30.GL_LINES);
 		}
 		return objData;
 	}
@@ -782,7 +783,7 @@ public final class Object3DBuilder {
 			}
 			return new Object3DData(objData.getVertexBuffer()).setDrawOrder(drawOrder).
 					setVertexNormalsArrayBuffer(objData.getVertexNormalsBuffer()).setColor(objData.getColor())
-					.setDrawMode(GLES20.GL_LINES);
+					.setDrawMode(GLES30.GL_LINES);
 		} catch (Exception ex) {
 			Log.e("Object3DBuilder", ex.getMessage(), ex);
 		}
@@ -798,7 +799,7 @@ public final class Object3DBuilder {
 	 * @return the model with all the normal lines
 	 */
 	public static Object3DData buildFaceNormals(Object3DData obj) {
-		if (obj.getDrawMode() != GLES20.GL_TRIANGLES) {
+		if (obj.getDrawMode() != GLES30.GL_TRIANGLES) {
 			return null;
 		}
 
@@ -912,7 +913,7 @@ public final class Object3DBuilder {
             }
 
 			AnimatedModel faceNormalsModel = new AnimatedModel(normalsLines);
-			faceNormalsModel.setDrawMode(GLES20.GL_LINES).setColor(obj.getColor());
+			faceNormalsModel.setDrawMode(GLES30.GL_LINES).setColor(obj.getColor());
 			faceNormalsModel.setPosition(obj.getPosition());
 			faceNormalsModel.setScale(obj.getScale());
 
@@ -927,7 +928,7 @@ public final class Object3DBuilder {
 			return faceNormalsModel;
 		} else {
             Object3DData faceNormalsModel = new Object3DData(normalsLines);
-            faceNormalsModel.setDrawMode(GLES20.GL_LINES).setColor(obj.getColor());
+            faceNormalsModel.setDrawMode(GLES30.GL_LINES).setColor(obj.getColor());
             faceNormalsModel.setPosition(obj.getPosition());
             faceNormalsModel.setScale(obj.getScale());
 		    Log.i("Object3DBuilder","New face normal lines object created");
@@ -944,7 +945,7 @@ public final class Object3DBuilder {
      * @return the model with all the normal lines
      */
     public static Object3DData buildFaceNormals2(Object3DData obj) {
-        if (obj.getDrawMode() != GLES20.GL_TRIANGLES) {
+        if (obj.getDrawMode() != GLES30.GL_TRIANGLES) {
             return null;
         }
 
@@ -1043,7 +1044,7 @@ public final class Object3DBuilder {
             }
 
             AnimatedModel faceNormalsModel = new AnimatedModel(normalsLines);
-            faceNormalsModel.setDrawMode(GLES20.GL_LINES).setColor(obj.getColor());
+            faceNormalsModel.setDrawMode(GLES30.GL_LINES).setColor(obj.getColor());
             faceNormalsModel.setPosition(obj.getPosition());
             faceNormalsModel.setScale(obj.getScale());
 
@@ -1057,7 +1058,7 @@ public final class Object3DBuilder {
             return faceNormalsModel;
         } else {
             Object3DData faceNormalsModel = new Object3DData(normalsLines);
-            faceNormalsModel.setDrawMode(GLES20.GL_LINES).setColor(obj.getColor());
+            faceNormalsModel.setDrawMode(GLES30.GL_LINES).setColor(obj.getColor());
             faceNormalsModel.setPosition(obj.getPosition());
             faceNormalsModel.setScale(obj.getScale());
             return faceNormalsModel;
@@ -1072,7 +1073,7 @@ public final class Object3DBuilder {
                 .asFloatBuffer());
         skeleton.setVertexNormalsArrayBuffer(createNativeByteBuffer(animatedModel.getJointCount()*3*3*4)
                 .asFloatBuffer());
-        skeleton.setDrawMode(GLES20.GL_TRIANGLES);
+        skeleton.setDrawMode(GLES30.GL_TRIANGLES);
         skeleton.setRootJoint(animatedModel.getRootJoint(), animatedModel.getJointCount(), animatedModel.getBoneCount());
         skeleton.setJointIds(createNativeByteBuffer(skeleton.getJointCount()*3*3*4).asFloatBuffer());
         skeleton.doAnimation(animatedModel.getAnimation());

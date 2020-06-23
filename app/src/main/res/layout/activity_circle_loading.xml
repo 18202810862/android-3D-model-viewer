@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="org.andresoviedo.app.model3D.CircleLoadingActivity">
+
+    <com.tengchong.android.CircleLoadingView
+        android:id="@+id/circleView"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_centerInParent="true"
+        app:cl_circleRadius="1000dp"
+        app:cl_circleStrokeSize="5dp"
+        app:cl_fillAnimationDuration="200"
+        app:cl_src="@drawable/ic_app_gray"/>
+
+</RelativeLayout>

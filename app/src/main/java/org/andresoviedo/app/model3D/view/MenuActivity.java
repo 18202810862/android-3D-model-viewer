@@ -16,6 +16,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import org.andresoviedo.android_3d_model_engine.services.wavefront.WavefrontLoader;
+import org.andresoviedo.app.model3D.CircleLoadingActivity;
 import org.andresoviedo.dddmodel2.R;
 import org.andresoviedo.util.android.AndroidUtils;
 import org.andresoviedo.util.android.AssetUtils;
@@ -89,9 +90,13 @@ public class MenuActivity extends ListActivity {
                     MenuActivity.this.startActivity(aboutIntent);
                     break;
                 case HELP:
-                    Intent helpIntent = new Intent(MenuActivity.this.getApplicationContext(), TextActivity.class);
-                    helpIntent.putExtra("title", selectedItem);
-                    helpIntent.putExtra("text", getResources().getString(R.string.help_text));
+
+//                    Intent helpIntent = new Intent(MenuActivity.this.getApplicationContext(), TextActivity.class);
+//                    helpIntent.putExtra("title", selectedItem);
+//                    helpIntent.putExtra("text", getResources().getString(R.string.help_text));
+//                    MenuActivity.this.startActivity(helpIntent);
+
+                    Intent helpIntent = new Intent(MenuActivity.this.getApplicationContext(), CircleLoadingActivity.class);
                     MenuActivity.this.startActivity(helpIntent);
                     break;
                 case SETTINGS:

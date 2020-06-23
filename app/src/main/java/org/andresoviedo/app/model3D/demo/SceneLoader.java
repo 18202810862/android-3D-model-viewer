@@ -484,6 +484,7 @@ public class SceneLoader implements LoaderTask.Callback {
             return;
         }
         obj = obj != null ? obj : objects.get(0);
+        Log.i("SceneLoader","-------->uri = " + uri);
         obj.setTextureData(IOUtils.read(ContentUtils.getInputStream(uri)));
         this.drawTextures = true;
     }

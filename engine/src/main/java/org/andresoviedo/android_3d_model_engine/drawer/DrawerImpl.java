@@ -1,6 +1,7 @@
 package org.andresoviedo.android_3d_model_engine.drawer;
 
-import android.opengl.GLES20;
+import android.opengl.GLES30;
+import android.opengl.GLES30;
 import android.opengl.Matrix;
 import android.os.SystemClock;
 import android.util.Log;
@@ -78,8 +79,8 @@ class DrawerImpl implements Object3D {
         Log.i("Object3DImpl2", "Compiling 3D Drawer... " + id);
 
         // load shaders
-        int vertexShader = GLUtil.loadShader(GLES20.GL_VERTEX_SHADER, vertexShaderCode);
-        int fragmentShader = GLUtil.loadShader(GLES20.GL_FRAGMENT_SHADER, fragmentShaderCode);
+        int vertexShader = GLUtil.loadShader(GLES30.GL_VERTEX_SHADER, vertexShaderCode);
+        int fragmentShader = GLUtil.loadShader(GLES30.GL_FRAGMENT_SHADER, fragmentShaderCode);
 
         // compile program
         mProgram = GLUtil.createAndLinkProgram(vertexShader, fragmentShader, features.toArray(new String[features.size()]));
@@ -104,7 +105,7 @@ class DrawerImpl implements Object3D {
         // Log.d("Object3DImpl", "Drawing '" + obj.getId() + "' using shader '" + id + "'...");
 
         // Add program to OpenGL environment
-        GLES20.glUseProgram(mProgram);
+        GLES30.glUseProgram(mProgram);
 
         float[] mMatrix = getMMatrix(obj);
         float[] mvMatrix = getMvMatrix(mMatrix, vMatrix);
@@ -156,24 +157,24 @@ class DrawerImpl implements Object3D {
         drawShape(obj, drawMode, drawSize);
 
         // Disable vertex array
-        GLES20.glDisableVertexAttribArray(mPositionHandle);
+        GLES30.glDisableVertexAttribArray(mPositionHandle);
 
         if (mColorHandle != -1) {
-            GLES20.glDisableVertexAttribArray(mColorHandle);
+            GLES30.glDisableVertexAttribArray(mColorHandle);
         }
 
         if (mNormalHandle != -1) {
-            GLES20.glDisableVertexAttribArray(mNormalHandle);
+            GLES30.glDisableVertexAttribArray(mNormalHandle);
         }
 
         // Disable vertex array
         if (mTextureHandle != -1) {
-            GLES20.glDisableVertexAttribArray(mTextureHandle);
+            GLES30.glDisableVertexAttribArray(mTextureHandle);
         }
 
         if (in_weightsHandle != -1) {
-            GLES20.glDisableVertexAttribArray(in_weightsHandle);
-            GLES20.glDisableVertexAttribArray(in_jointIndicesHandle);
+            GLES30.glDisableVertexAttribArray(in_weightsHandle);
+            GLES30.glDisableVertexAttribArray(in_jointIndicesHandle);
         }
     }
 
@@ -194,11 +195,11 @@ class DrawerImpl implements Object3D {
     private void setMvpMatrix(float[] mvpMatrix) {
 
         // get handle to shape's transformation matrix
-        int mMVPMatrixHandle = GLES20.glGetUniformLocation(mProgram, "u_MVPMatrix");
+        int mMVPMatrixHandle = GLES30.glGetUniformLocation(mProgram, "u_MVPMatrix");
         GLUtil.checkGlError("glGetUniformLocation");
 
         // Apply the projection and view transformation
-        GLES20.glUniformMatrix4fv(mMVPMatrixHandle, 1, false, mvpMatrix, 0);
+        GLES30.glUniformMatrix4fv(mMVPMatrixHandle, 1, false, mvpMatrix, 0);
         GLUtil.checkGlError("glUniformMatrix4fv");
     }
 
@@ -209,27 +210,27 @@ class DrawerImpl implements Object3D {
     private void setColor(Object3DData obj) {
 
         // get handle to fragment shader's vColor member
-        int mColorHandle = GLES20.glGetUniformLocation(mProgram, "vColor");
+        int mColorHandle = GLES30.glGetUniformLocation(mProgram, "vColor");
         GLUtil.checkGlError("glGetUniformLocation");
 
         // Set color for drawing the triangle
         float[] color = obj.getColor() != null ? obj.getColor() : DEFAULT_COLOR;
-        GLES20.glUniform4fv(mColorHandle, 1, color, 0);
+        GLES30.glUniform4fv(mColorHandle, 1, color, 0);
         GLUtil.checkGlError("glUniform4fv");
     }
 
     private int setColors(Object3DData obj) {
 
         // get handle to fragment shader's vColor member
-        int mColorHandle = GLES20.glGetAttribLocation(mProgram, "a_Color");
+        int mColorHandle = GLES30.glGetAttribLocation(mProgram, "a_Color");
         GLUtil.checkGlError("glGetAttribLocation");
 
         // Pass in the color information
-        GLES20.glEnableVertexAttribArray(mColorHandle);
+        GLES30.glEnableVertexAttribArray(mColorHandle);
         GLUtil.checkGlError("glEnableVertexAttribArray");
 
         obj.getVertexColorsArrayBuffer().position(0);
-        GLES20.glVertexAttribPointer(mColorHandle, 4, GLES20.GL_FLOAT, false, 0, obj.getVertexColorsArrayBuffer());
+        GLES30.glVertexAttribPointer(mColorHandle, 4, GLES30.GL_FLOAT, false, 0, obj.getVertexColorsArrayBuffer());
         GLUtil.checkGlError("glVertexAttribPointer");
 
         return mColorHandle;
@@ -238,17 +239,17 @@ class DrawerImpl implements Object3D {
     private int setPosition(Object3DData obj) {
 
         // get handle to vertex shader's a_Position member
-        int mPositionHandle = GLES20.glGetAttribLocation(mProgram, "a_Position");
+        int mPositionHandle = GLES30.glGetAttribLocation(mProgram, "a_Position");
         GLUtil.checkGlError("glGetAttribLocation");
 
         // Enable a handle to the triangle vertices
-        GLES20.glEnableVertexAttribArray(mPositionHandle);
+        GLES30.glEnableVertexAttribArray(mPositionHandle);
         GLUtil.checkGlError("glEnableVertexAttribArray");
 
         FloatBuffer vertexBuffer = obj.getVertexArrayBuffer() != null ? obj.getVertexArrayBuffer()
                 : obj.getVertexBuffer();
         vertexBuffer.position(0);
-        GLES20.glVertexAttribPointer(mPositionHandle, COORDS_PER_VERTEX, GLES20.GL_FLOAT, false, VERTEX_STRIDE,
+        GLES30.glVertexAttribPointer(mPositionHandle, COORDS_PER_VERTEX, GLES30.GL_FLOAT, false, VERTEX_STRIDE,
                 vertexBuffer);
         GLUtil.checkGlError("glVertexAttribPointer");
 
@@ -260,16 +261,16 @@ class DrawerImpl implements Object3D {
     }
 
     private int setNormals(Object3DData obj) {
-        int mNormalHandle = GLES20.glGetAttribLocation(mProgram, "a_Normal");
+        int mNormalHandle = GLES30.glGetAttribLocation(mProgram, "a_Normal");
         GLUtil.checkGlError("glGetAttribLocation");
 
-        GLES20.glEnableVertexAttribArray(mNormalHandle);
+        GLES30.glEnableVertexAttribArray(mNormalHandle);
         GLUtil.checkGlError("glEnableVertexAttribArray");
 
         // Pass in the normal information
         FloatBuffer buffer = obj.getVertexNormalsArrayBuffer() != null ? obj.getVertexNormalsArrayBuffer() : obj.getNormals();
         buffer.position(0);
-        GLES20.glVertexAttribPointer(mNormalHandle, 3, GLES20.GL_FLOAT, false, 0, buffer);
+        GLES30.glVertexAttribPointer(mNormalHandle, 3, GLES30.GL_FLOAT, false, 0, buffer);
 
         return mNormalHandle;
     }
@@ -279,15 +280,15 @@ class DrawerImpl implements Object3D {
     }
 
     private void setLightPos(float[] lightPosInEyeSpace) {
-        int mLightPosHandle = GLES20.glGetUniformLocation(mProgram, "u_LightPos");
+        int mLightPosHandle = GLES30.glGetUniformLocation(mProgram, "u_LightPos");
         // Pass in the light position in eye space.
-        GLES20.glUniform3f(mLightPosHandle, lightPosInEyeSpace[0], lightPosInEyeSpace[1], lightPosInEyeSpace[2]);
+        GLES30.glUniform3f(mLightPosHandle, lightPosInEyeSpace[0], lightPosInEyeSpace[1], lightPosInEyeSpace[2]);
     }
 
     private void setCameraPos(float[] cameraPosInWorldSpace) {
-        int mLightPosHandle = GLES20.glGetUniformLocation(mProgram, "u_cameraPos");
+        int mLightPosHandle = GLES30.glGetUniformLocation(mProgram, "u_cameraPos");
         // Pass in the light position in eye space.
-        GLES20.glUniform3fv(mLightPosHandle, 0, cameraPosInWorldSpace, 0);
+        GLES30.glUniform3fv(mLightPosHandle, 0, cameraPosInWorldSpace, 0);
     }
 
     private boolean supportsMMatrix() {
@@ -295,11 +296,11 @@ class DrawerImpl implements Object3D {
     }
 
     private void setMMatrix(float[] modelMatrix) {
-        int mMVMatrixHandle = GLES20.glGetUniformLocation(mProgram, "u_MVMatrix");
+        int mMVMatrixHandle = GLES30.glGetUniformLocation(mProgram, "u_MVMatrix");
         GLUtil.checkGlError("glGetUniformLocation");
 
         // Pass in the modelview matrix.
-        GLES20.glUniformMatrix4fv(mMVMatrixHandle, 1, false, modelMatrix, 0);
+        GLES30.glUniformMatrix4fv(mMVMatrixHandle, 1, false, modelMatrix, 0);
         GLUtil.checkGlError("glUniformMatrix4fv");
     }
 
@@ -308,40 +309,40 @@ class DrawerImpl implements Object3D {
     }
 
     private void setColorMask(float[] colorMask) {
-        int vColorMaskHandle = GLES20.glGetUniformLocation(mProgram, "vColorMask");
+        int vColorMaskHandle = GLES30.glGetUniformLocation(mProgram, "vColorMask");
         GLUtil.checkGlError("glGetUniformLocation");
 
         float[] color = colorMask != null ? colorMask : NO_COLOR_MASK;
-        GLES20.glUniform4fv(vColorMaskHandle, 1, color, 0);
+        GLES30.glUniform4fv(vColorMaskHandle, 1, color, 0);
         GLUtil.checkGlError("glUniform4fv");
     }
 
     private int setTexture(Object3DData obj, int textureId) {
-        int mTextureUniformHandle = GLES20.glGetUniformLocation(mProgram, "u_Texture");
+        int mTextureUniformHandle = GLES30.glGetUniformLocation(mProgram, "u_Texture");
         GLUtil.checkGlError("glGetUniformLocation");
 
         // Set the active texture unit to texture unit 0.
-        GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
+        GLES30.glActiveTexture(GLES30.GL_TEXTURE0);
         GLUtil.checkGlError("glActiveTexture");
 
         // Bind to the texture in OpenGL
-        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, textureId);
+        GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, textureId);
         GLUtil.checkGlError("glBindTexture");
 
         // Tell the texture uniform sampler to use this texture in the shader by binding to texture unit 0.
-        GLES20.glUniform1i(mTextureUniformHandle, 0);
+        GLES30.glUniform1i(mTextureUniformHandle, 0);
         GLUtil.checkGlError("glUniform1i");
 
-        int mTextureCoordinateHandle = GLES20.glGetAttribLocation(mProgram, "a_TexCoordinate");
+        int mTextureCoordinateHandle = GLES30.glGetAttribLocation(mProgram, "a_TexCoordinate");
         GLUtil.checkGlError("glGetAttribLocation");
 
         // Enable a handle to the triangle vertices
-        GLES20.glEnableVertexAttribArray(mTextureCoordinateHandle);
+        GLES30.glEnableVertexAttribArray(mTextureCoordinateHandle);
         GLUtil.checkGlError("glEnableVertexAttribArray");
 
         // Prepare the triangle coordinate data
         obj.getTextureCoordsArrayBuffer().position(0);
-        GLES20.glVertexAttribPointer(mTextureCoordinateHandle, 2, GLES20.GL_FLOAT, false, 0,
+        GLES30.glVertexAttribPointer(mTextureCoordinateHandle, 2, GLES30.GL_FLOAT, false, 0,
                 obj.getTextureCoordsArrayBuffer());
         GLUtil.checkGlError("glVertexAttribPointer");
 
@@ -353,22 +354,22 @@ class DrawerImpl implements Object3D {
     }
 
     private int setWeights(AnimatedModel animatedModel) {
-        int in_weightsHandle = GLES20.glGetAttribLocation(mProgram, "in_weights");
+        int in_weightsHandle = GLES30.glGetAttribLocation(mProgram, "in_weights");
         GLUtil.checkGlError("glGetAttribLocation");
-        GLES20.glEnableVertexAttribArray(in_weightsHandle);
+        GLES30.glEnableVertexAttribArray(in_weightsHandle);
         GLUtil.checkGlError("glEnableVertexAttribArray");
         animatedModel.getVertexWeights().position(0);
-        GLES20.glVertexAttribPointer(in_weightsHandle, 3, GLES20.GL_FLOAT, false, 0, animatedModel.getVertexWeights());
+        GLES30.glVertexAttribPointer(in_weightsHandle, 3, GLES30.GL_FLOAT, false, 0, animatedModel.getVertexWeights());
         return in_weightsHandle;
     }
 
     private int setJoints(AnimatedModel animatedModel) {
-        int in_jointIndicesHandle = GLES20.glGetAttribLocation(mProgram, "in_jointIndices");
+        int in_jointIndicesHandle = GLES30.glGetAttribLocation(mProgram, "in_jointIndices");
         GLUtil.checkGlError("glGetAttribLocation");
-        GLES20.glEnableVertexAttribArray(in_jointIndicesHandle);
+        GLES30.glEnableVertexAttribArray(in_jointIndicesHandle);
         GLUtil.checkGlError("glEnableVertexAttribArray");
         animatedModel.getJointIds().position(0);
-        GLES20.glVertexAttribPointer(in_jointIndicesHandle, 3, GLES20.GL_FLOAT, false, 0, animatedModel.getJointIds());
+        GLES30.glVertexAttribPointer(in_jointIndicesHandle, 3, GLES30.GL_FLOAT, false, 0, animatedModel.getJointIds());
         GLUtil.checkGlError("glVertexAttribPointer");
         return in_jointIndicesHandle;
     }
@@ -386,9 +387,9 @@ class DrawerImpl implements Object3D {
                 jointTransformHandleName = "jointTransforms[" + i + "]";
                 cache1.put(i, jointTransformHandleName);
             }
-            int jointTransformsHandle = GLES20.glGetUniformLocation(mProgram, jointTransformHandleName);
+            int jointTransformsHandle = GLES30.glGetUniformLocation(mProgram, jointTransformHandleName);
             GLUtil.checkGlError("glGetUniformLocation");
-            GLES20.glUniformMatrix4fv(jointTransformsHandle, 1, false, jointTransform, 0);
+            GLES30.glUniformMatrix4fv(jointTransformsHandle, 1, false, jointTransform, 0);
             //handles.add(jointTransformsHandle);
         }
     }
@@ -400,10 +401,10 @@ class DrawerImpl implements Object3D {
         List<int[]> drawModeList = obj.getDrawModeList();
 
         Buffer drawOrderBuffer = obj.getDrawOrder();
-        int drawBufferType = GLES20.GL_UNSIGNED_INT;
+        int drawBufferType = GLES30.GL_UNSIGNED_INT;
         if (!drawUsingUnsignedInt) {
             drawOrderBuffer = obj.getDrawOrderAsShort();
-            drawBufferType = GLES20.GL_UNSIGNED_SHORT;
+            drawBufferType = GLES30.GL_UNSIGNED_SHORT;
         }
 
         if (obj.isDrawUsingArrays()) {
@@ -418,15 +419,15 @@ class DrawerImpl implements Object3D {
                     int drawModePolygon = polygon[0];
                     int vertexPos = polygon[1];
                     int drawSizePolygon = polygon[2];
-                    if (drawMode == GLES20.GL_LINE_LOOP && polygon[2] > 3) {
+                    if (drawMode == GLES30.GL_LINE_LOOP && polygon[2] > 3) {
                         // is this wireframe?
                         // Log.v("Object3DImpl","Drawing wireframe for '" + obj.getId() + "' (" + drawSizePolygon + ")...");
                         for (int i = 0; i < polygon[2] - 2; i++) {
                             // Log.v("Object3DImpl","Drawing wireframe triangle '" + i + "' for '" + obj.getId() + "'...");
-                            GLES20.glDrawArrays(drawMode, polygon[1] + i, 3);
+                            GLES30.glDrawArrays(drawMode, polygon[1] + i, 3);
                         }
                     } else {
-                        GLES20.glDrawArrays(drawMode, polygon[1], polygon[2]);
+                        GLES30.glDrawArrays(drawMode, polygon[1], polygon[2]);
                     }
                 }
             } else {
@@ -437,7 +438,7 @@ class DrawerImpl implements Object3D {
                     int vertexPos = drawPart[1];
                     int drawSizePolygon = drawPart[2];
                     drawOrderBuffer.position(vertexPos);
-                    GLES20.glDrawElements(drawModePolygon, drawSizePolygon, drawBufferType, drawOrderBuffer);
+                    GLES30.glDrawElements(drawModePolygon, drawSizePolygon, drawBufferType, drawOrderBuffer);
                     if (drawUsingUnsignedInt && GLUtil.checkGlError("glDrawElements")) {
                         drawUsingUnsignedInt = false;
                     }
@@ -446,10 +447,10 @@ class DrawerImpl implements Object3D {
         } else {
             if (drawOrderBuffer != null) {
                 if (drawSize <= 0) {
-                    // String mode = drawMode == GLES20.GL_POINTS ? "Points" : drawMode == GLES20.GL_LINES? "Lines": "Triangles?";
+                    // String mode = drawMode == GLES30.GL_POINTS ? "Points" : drawMode == GLES30.GL_LINES? "Lines": "Triangles?";
                     // Log.v(obj.getId(),"Drawing all elements with mode '"+drawMode+"'...");
                     drawOrderBuffer.position(0);
-                    GLES20.glDrawElements(drawMode, drawOrderBuffer.capacity(), drawBufferType,
+                    GLES30.glDrawElements(drawMode, drawOrderBuffer.capacity(), drawBufferType,
                             drawOrderBuffer);
                     if (drawUsingUnsignedInt && GLUtil.checkGlError("glDrawElements")) {
                         drawUsingUnsignedInt = false;
@@ -458,7 +459,7 @@ class DrawerImpl implements Object3D {
                     //Log.d(obj.getId(),"Drawing single elements of size '"+drawSize+"'...");
                     for (int i = 0; i < drawOrderBuffer.capacity(); i += drawSize) {
                         drawOrderBuffer.position(i);
-                        GLES20.glDrawElements(drawMode, drawSize, drawBufferType, drawOrderBuffer);
+                        GLES30.glDrawElements(drawMode, drawSize, drawBufferType, drawOrderBuffer);
                     }
                     if (drawUsingUnsignedInt && GLUtil.checkGlError("glDrawElements")) {
                         drawUsingUnsignedInt = false;
@@ -478,11 +479,11 @@ class DrawerImpl implements Object3D {
                         drawCount = (int) ((Math.sin(rotation - this.shift + Math.PI / 2 * 3) + 1) / 2f * drawCount);
                     }
                     // Log.d(obj.getId(),"Drawing all triangles using arrays... counter("+drawCount+")");
-                    GLES20.glDrawArrays(drawMode, 0, drawCount);
+                    GLES30.glDrawArrays(drawMode, 0, drawCount);
                 } else {
                     //Log.d(obj.getId(),"Drawing single triangles using arrays...");
                     for (int i = 0; i < vertexBuffer.capacity() / COORDS_PER_VERTEX; i += drawSize) {
-                        GLES20.glDrawArrays(drawMode, i, drawSize);
+                        GLES30.glDrawArrays(drawMode, i, drawSize);
                     }
                 }
             }

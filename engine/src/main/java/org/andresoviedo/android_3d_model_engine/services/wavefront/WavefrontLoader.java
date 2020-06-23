@@ -30,7 +30,8 @@
 package org.andresoviedo.android_3d_model_engine.services.wavefront;
 
 import android.net.Uri;
-import android.opengl.GLES20;
+import android.opengl.GLES30;
+import android.opengl.GLES30;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
@@ -87,7 +88,7 @@ public class WavefrontLoader {
 	private FloatBuffer textureCoordsBuffer;
 
 	// flags
-	private static final int triangleMode = GLES20.GL_TRIANGLE_FAN;
+	private static final int triangleMode = GLES30.GL_TRIANGLE_FAN;
 
 	public WavefrontLoader(String nm) {
 		modelNm = nm;
@@ -815,24 +816,24 @@ public class WavefrontLoader {
 			return ks;
 		}
 
-		public void setMaterialColors(GLES20 gl)
+		public void setMaterialColors(GLES30 gl)
 		// start rendering using this material's colour information
 		{
 			// if (ka != null) { // ambient color
 			// float[] colorKa = {ka.getX(), ka.getY(), ka.getZ(), 1.0f};
-			// gl.glMaterialfv(GLES20.GL_FRONT_AND_BACK, GLES20.GL_AMBIENT, colorKa, 0);
+			// gl.glMaterialfv(GLES30.GL_FRONT_AND_BACK, GLES30.GL_AMBIENT, colorKa, 0);
 			// }
 			// if (kd != null) { // diffuse color
 			// float[] colorKd = {kd.getX(), kd.getY(), kd.getZ(), 1.0f};
-			// gl.glMaterialfv(GLES20.GL_FRONT_AND_BACK, GLES20.GL_DIFFUSE, colorKd, 0);
+			// gl.glMaterialfv(GLES30.GL_FRONT_AND_BACK, GLES30.GL_DIFFUSE, colorKd, 0);
 			// }
 			// if (ks != null) { // specular color
 			// float[] colorKs = {ks.getX(), ks.getY(), ks.getZ(), 1.0f};
-			// gl.glMaterialfv(GLES20.GL_FRONT_AND_BACK, GLES20.GL_SPECULAR, colorKs, 0);
+			// gl.glMaterialfv(GLES30.GL_FRONT_AND_BACK, GLES30.GL_SPECULAR, colorKs, 0);
 			// }
 			//
 			// if (ns != 0.0f) { // shininess
-			// gl.glMaterialf(GLES20.GL_FRONT_AND_BACK, GLES20.GL_SHININESS, ns);
+			// gl.glMaterialf(GLES30.GL_FRONT_AND_BACK, GLES30.GL_SHININESS, ns);
 			// }
 			//
 			// if (d != 1.0f) { // alpha
@@ -956,7 +957,7 @@ public class WavefrontLoader {
 
 					// convert to triangles all polygons
 					String faceToken = null;
-					if (WavefrontLoader.triangleMode == GLES20.GL_TRIANGLE_FAN) {
+					if (WavefrontLoader.triangleMode == GLES30.GL_TRIANGLE_FAN) {
 						if (faceIndex == 0){
 							// In FAN mode all faces shares the initial vertex
 							faceToken = tokens[0];// get a v/vt/vn

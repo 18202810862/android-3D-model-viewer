@@ -1,7 +1,7 @@
 package org.andresoviedo.android_3d_model_engine.model;
 
 import android.net.Uri;
-import android.opengl.GLES20;
+import android.opengl.GLES30;
 import android.opengl.Matrix;
 import android.util.Log;
 
@@ -53,7 +53,7 @@ public class Object3DData {
 	 * The minimum thing we can draw in space is a vertex (or point).
 	 * This drawing mode uses the vertexBuffer
 	 */
-	private int drawMode = GLES20.GL_POINTS;
+	private int drawMode = GLES30.GL_POINTS;
 	private int drawSize;
 
 	// Model data
@@ -573,7 +573,7 @@ public class Object3DData {
 	}
 
 	public Object3DData centerAndScaleAndExplode(float maxSize, float explodeFactor) {
-		if (drawMode != GLES20.GL_TRIANGLES) {
+		if (drawMode != GLES30.GL_TRIANGLES) {
 			Log.i("Object3DData", "Cant explode '" + getId() + " because its not made of triangles...");
 			return this;
 		}

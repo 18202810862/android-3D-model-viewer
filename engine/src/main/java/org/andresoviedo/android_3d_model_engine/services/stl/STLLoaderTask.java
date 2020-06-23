@@ -2,7 +2,8 @@ package org.andresoviedo.android_3d_model_engine.services.stl;
 
 import android.app.Activity;
 import android.net.Uri;
-import android.opengl.GLES20;
+import android.opengl.GLES30;
+import android.opengl.GLES30;
 import android.util.Log;
 
 import org.andresoviedo.android_3d_model_engine.model.Object3DData;
@@ -50,7 +51,7 @@ public final class STLLoaderTask extends LoaderTask {
         Object3DData data3D = new Object3DData(vertexBuffer).setVertexNormalsArrayBuffer(normalsBuffer);
         data3D.setDimensions(modelDimensions);
         data3D.setDrawUsingArrays(true);
-        data3D.setDrawMode(GLES20.GL_TRIANGLES);
+        data3D.setDrawMode(GLES30.GL_TRIANGLES);
         if (totalFaces > 0) {
             data3D.setFaces(new WavefrontLoader.Faces(totalFaces));
         }

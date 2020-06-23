@@ -1,7 +1,7 @@
 package org.andresoviedo.android_3d_model_engine.services.collada.loader;
 
 
-import android.opengl.GLES20;
+import android.opengl.GLES30;
 import android.opengl.Matrix;
 import android.util.Log;
 
@@ -79,7 +79,7 @@ public class ColladaLoader {
 			data3D.setVertexColorsArrayBuffer(meshData.getColorsBuffer());
 			data3D.setDimensions(new WavefrontLoader.ModelDimensions());
 			data3D.setDrawOrder(indexBuffer);
-			data3D.setDrawMode(GLES20.GL_TRIANGLES);
+			data3D.setDrawMode(GLES30.GL_TRIANGLES);
 
 			if (meshData.getJointIds() != null) {
 				//Log.v("ColladaLoader","joint: "+ Arrays.toString(meshData.getJointIds()));

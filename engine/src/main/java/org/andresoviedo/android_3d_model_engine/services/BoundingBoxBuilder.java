@@ -1,6 +1,7 @@
 package org.andresoviedo.android_3d_model_engine.services;
 
-import android.opengl.GLES20;
+import android.opengl.GLES30;
+import android.opengl.GLES30;
 
 import org.andresoviedo.android_3d_model_engine.model.BoundingBox;
 
@@ -84,7 +85,7 @@ public class BoundingBoxBuilder {
 	}
 
 	public int getDrawMode() {
-		return GLES20.GL_LINE_LOOP;
+		return GLES30.GL_LINE_LOOP;
 	}
 
 	public int getDrawSize() {
@@ -95,7 +96,7 @@ public class BoundingBoxBuilder {
 		List<int[]> ret = new ArrayList<int[]>();
 		int drawOrderPos = 0;
 		for (int i = 0; i < drawOrder.capacity(); i += 4) {
-			ret.add(new int[]{GLES20.GL_LINE_LOOP, drawOrderPos, 4});
+			ret.add(new int[]{GLES30.GL_LINE_LOOP, drawOrderPos, 4});
 			drawOrderPos += 4;
 		}
 		return ret;
