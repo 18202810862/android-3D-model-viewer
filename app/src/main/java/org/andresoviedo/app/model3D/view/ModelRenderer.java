@@ -328,6 +328,7 @@ public class ModelRenderer implements GLSurfaceView.Renderer {
 
 		// draw all available objects
 		List<Object3DData> objects = scene.getObjects();
+		Log.i(TAG,"objects.size = " + objects);
 		for (int i=0; i<objects.size(); i++) {
 			Object3DData objData = null;
 			try {

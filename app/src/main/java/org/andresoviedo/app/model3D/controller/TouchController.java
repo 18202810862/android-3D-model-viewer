@@ -73,6 +73,7 @@ public class TouchController {
 		// and other input controls. In this case, you are only
 		// interested in events where the touch position changed.
 
+		Log.i(TAG,"onTouchEvent------->getActionMasked = " + motionEvent.getActionMasked());
 		switch (motionEvent.getActionMasked()) {
 		case MotionEvent.ACTION_UP:
 		case MotionEvent.ACTION_CANCEL:
@@ -110,6 +111,8 @@ public class TouchController {
 		}
 
 		pointerCount = motionEvent.getPointerCount();
+		Log.i(TAG,"onTouchEvent------->pointerCount = " + pointerCount);
+
 
 		if (pointerCount == 1) {
 			x1 = motionEvent.getX();
@@ -120,6 +123,7 @@ public class TouchController {
 				previousY1 = y1;
 			}
 			dx1 = x1 - previousX1;
+			Log.i(TAG,"onTouchEvent------->pointerCount = " + pointerCount);
 			dy1 = y1 - previousY1;
 		} else if (pointerCount == 2) {
 			x1 = motionEvent.getX(0);
@@ -183,6 +187,8 @@ public class TouchController {
 		}
 
 		int max = Math.max(mRenderer.getWidth(), mRenderer.getHeight());
+		Log.i(TAG,"onTouchEvent------->max = " + max);
+
 		if (touchDelay > 1) {
 			// INFO: Process gesture
             SceneLoader scene = view.getModelActivity().getScene();
@@ -191,10 +197,15 @@ public class TouchController {
 			if (pointerCount == 1 && currentPress1 > 4.0f) {
 			} else if (pointerCount == 1) {
 				touchStatus = TOUCH_STATUS_MOVING_WORLD;
-				// Log.v(TAG, "Translating camera (dx,dy) '" + dx1 + "','" + dy1 + "'...");
+				 Log.v(TAG, "Translating camera (dx,dy) '" + dx1 + "','" + dy1 + "'...");
 				dx1 = (float)(dx1 / max * Math.PI * 2);
+				Log.i(TAG,"onTouchEvent------->dx1 = " + dx1);
+
 				dy1 = (float)(dy1 / max * Math.PI * 2);
-				camera.translateCamera(dx1,dy1);
+				Log.i(TAG,"onTouchEvent------->dy1 = " + dy1);
+
+//				camera.translateCamera(dx1,dy1);
+				camera.translateCamera(dx1,0);
 			} else if (pointerCount == 2) {
 				if (fingersAreClosing) {
 					touchStatus = TOUCH_STATUS_ZOOMING_CAMERA;
